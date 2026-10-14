@@ -97,6 +97,8 @@ export const defaultSettings = {
 	limitQuickReplyRows: true,
 	quickReplyRowsDesktop: 2,
 	quickReplyRowsMobile: 1,
+	mobileLayoutHeight: 1000,
+	sheldHeightPercent: 0,
 	spriteZoom: false,
 	zoomSpeed: 0.6,
 	zoomAnimation: "ease",

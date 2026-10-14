@@ -407,3 +407,28 @@ body.waifuMode.prome-limit-quick-replies #qr--bar > .qr--buttons {
     flex-shrink: 0;
     min-width: 0;
 }
+
+.prome-layout-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.prome-layout-controls input[type="range"] {
+    flex: 1 1 120px;
+    min-width: 80px;
+}
+.prome-layout-controls input[type="number"] {
+    flex: 0 0 80px;
+    width: 80px;
+}
+body.waifuMode.prome-custom-sheld-height #sheld {
+    height: var(--prome-sheld-height) !important;
+    max-height: calc(100vh - var(--topBarBlockSize, 0px)) !important;
+    max-height: calc(100dvh - var(--topBarBlockSize, 0px)) !important;
+    min-height: 0 !important;
+}
+body.waifuMode.prome-custom-sheld-height:not(.movingUI) #sheld {
+    top: auto !important;
+    bottom: 0 !important;
+}

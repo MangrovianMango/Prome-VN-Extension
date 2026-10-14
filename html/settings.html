@@ -61,7 +61,22 @@
                         <input id="prome-quick-reply-desktop" type="range" min="1" max="6" step="1" value="2" />
                         <label for="prome-quick-reply-mobile">Mobile rows: <output id="prome-quick-reply-mobile-value">1</output></label>
                         <input id="prome-quick-reply-mobile" type="range" min="1" max="6" step="1" value="1" />
-                        <small>Mobile layout applies at a window width of 1000 pixels or less.</small>
+                        <label for="prome-mobile-layout-height-number">Apply mobile layout at height (px)</label>
+                        <div class="prome-layout-controls">
+                            <input id="prome-mobile-layout-height-slider" type="range" min="100" max="3000" step="1" value="1000" aria-label="Mobile layout height threshold" />
+                            <input id="prome-mobile-layout-height-number" class="text_pole" type="number" min="100" max="3000" step="1" value="1000" />
+                            <button id="prome-mobile-layout-height-reset" type="button" class="menu_button" title="Restore 1000 px">Reset</button>
+                        </div>
+                        <small>Default: 1000 px. Mobile rows apply when the visible window height is at or below this value.</small>
+                        <hr />
+                        <label for="prome-sheld-height-number">Sheld window height (%)</label>
+                        <div class="prome-layout-controls">
+                            <input id="prome-sheld-height-slider" type="range" min="0" max="100" step="1" value="0" aria-label="Sheld window height" />
+                            <input id="prome-sheld-height-number" class="text_pole" type="number" min="0" max="100" step="1" value="0" />
+                            <button id="prome-sheld-height-reset" type="button" class="menu_button" title="Restore automatic height">Reset</button>
+                        </div>
+                        <output id="prome-sheld-height-status">Automatic (default)</output>
+                        <small>Default: 0 = automatic (original SillyTavern/theme height). Set 1–100 for a percentage of the visible window. Applies in VN mode.</small>
                     </div>
                 </details>
 

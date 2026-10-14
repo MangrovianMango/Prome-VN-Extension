@@ -4,7 +4,8 @@ import { extensionName } from '../constants.js';
 
 const ACTIVE_CLASS = 'prome-limit-quick-replies';
 const HEIGHT_PROPERTY = '--prome-quick-replies-height';
-const mobileLayout = window.matchMedia('(max-width: 1000px)');
+const SHELD_CLASS = 'prome-custom-sheld-height';
+const SHELD_HEIGHT_PROPERTY = '--prome-sheld-height';
 let frame = null;
 let currentBar = null;
 let barObserver = null;
@@ -14,6 +15,31 @@ let initialized = false;
 function rowCount(value, fallback) {
     const number = Number(value);
     return Number.isFinite(number) ? Math.min(6, Math.max(1, Math.round(number))) : fallback;
+}
+
+function boundedNumber(value, min, max, fallback) {
+    if (value === '' || value === null || value === undefined) return fallback;
+    const number = Number(value);
+    return Number.isFinite(number) ? Math.min(max, Math.max(min, Math.round(number))) : fallback;
+}
+
+function viewportHeight() {
+    return window.visualViewport?.height || window.innerHeight;
+}
+
+function applySheldHeight(config) {
+    const percent = boundedNumber(config?.sheldHeightPercent, 0, 100, 0);
+    const active = Boolean(config && percent > 0 && document.body.classList.contains('waifuMode'));
+    document.body.classList.toggle(SHELD_CLASS, active);
+    const rootStyle = document.documentElement.style;
+    if (!active) {
+        rootStyle.removeProperty(SHELD_HEIGHT_PROPERTY);
+        return;
+    }
+    const height = `${Math.round(viewportHeight() * percent / 100)}px`;
+    if (rootStyle.getPropertyValue(SHELD_HEIGHT_PROPERTY) !== height) {
+        rootStyle.setProperty(SHELD_HEIGHT_PROPERTY, height);
+    }
 }
 
 function settings() {
@@ -45,6 +71,7 @@ function observeBar(bar) {
 
 export function applyQuickReplyLayout() {
     const config = settings();
+    applySheldHeight(config);
     const bar = document.getElementById('qr--bar');
     observeBar(bar);
     const active = Boolean(config?.limitQuickReplyRows !== false && config &&
@@ -55,7 +82,8 @@ export function applyQuickReplyLayout() {
         return;
     }
 
-    const rows = mobileLayout.matches
+    const threshold = boundedNumber(config.mobileLayoutHeight, 100, 3000, 1000);
+    const rows = viewportHeight() <= threshold
         ? rowCount(config.quickReplyRowsMobile, 1)
         : rowCount(config.quickReplyRowsDesktop, 2);
     // Measure the active theme/font instead of assuming a fixed button height.
@@ -111,6 +139,34 @@ export function setupQuickReplyLayout() {
             scheduleLayout();
         });
     }
+    for (const [prefix, key, min, max, fallback] of [
+        ['prome-mobile-layout-height', 'mobileLayoutHeight', 100, 3000, 1000],
+        ['prome-sheld-height', 'sheldHeightPercent', 0, 100, 0],
+    ]) {
+        const slider = document.getElementById(`${prefix}-slider`);
+        const number = document.getElementById(`${prefix}-number`);
+        const reset = document.getElementById(`${prefix}-reset`);
+        const status = document.getElementById(`${prefix}-status`);
+        config[key] = boundedNumber(config[key], min, max, fallback);
+        const sync = () => {
+            slider.value = number.value = config[key];
+            if (status) status.textContent = config[key] === 0 ? 'Automatic (default)' : `${config[key]}% of visible window`;
+        };
+        const update = value => {
+            config[key] = boundedNumber(value, min, max, fallback);
+            sync();
+            saveSettingsDebounced();
+            scheduleLayout();
+        };
+        slider.addEventListener('input', () => update(slider.value));
+        // Apply typed values on change/blur so intermediate digits aren't clamped.
+        number.addEventListener('change', () => update(number.value));
+        number.addEventListener('keydown', event => {
+            if (event.key === 'Enter') { event.preventDefault(); number.blur(); }
+        });
+        reset.addEventListener('click', () => update(fallback));
+        sync();
+    }
     // Theme/VN changes and a replaced Quick Reply bar need no page reload.
     new MutationObserver(scheduleLayout).observe(document.body, {
         attributes: true, attributeFilter: ['class'],
@@ -118,8 +174,6 @@ export function setupQuickReplyLayout() {
     new MutationObserver(() => {
         if (document.getElementById('qr--bar') !== currentBar) scheduleLayout();
     }).observe(document.body, { childList: true, subtree: true });
-    if (mobileLayout.addEventListener) mobileLayout.addEventListener('change', scheduleLayout);
-    else mobileLayout.addListener(scheduleLayout);
     window.addEventListener('resize', scheduleLayout);
     window.visualViewport?.addEventListener('resize', scheduleLayout);
     document.fonts?.ready.then(scheduleLayout);
