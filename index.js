@@ -29,6 +29,7 @@ import {
 } from "./listeners.js";
 
 /* Prome Feature Imports */
+import { setupQuickReplyLayout } from "./modules/quick-replies.js";
 import { prepareSlashCommands } from "./modules/slash-commands.js";
 import {
 	applyLetterboxMode,
@@ -343,6 +344,7 @@ jQuery(async () => {
 	setupTintJQuery();
 	setupAutoHideJQuery();
 	loadSettings();
+	setupQuickReplyLayout();
 	prepareSlashCommands();
 
 	eventSource.on(event_types.MESSAGE_SWIPED, applyShakeDebounce);

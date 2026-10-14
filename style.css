@@ -388,3 +388,22 @@ body.waifuMode.userSprite #expression-prome-user {
 #visual-novel-wrapper {
 	contain: layout style;
 }
+
+/* Keep the inline Quick Reply bar from consuming the VN message panel.
+ * Apply only to Prome's enabled VN layout; leave normal chat and popouts alone. */
+body.waifuMode.prome-limit-quick-replies #qr--bar {
+    box-sizing: border-box;
+    min-height: 0;
+    max-height: var(--prome-quick-replies-height, 80px) !important;
+    max-height: min(var(--prome-quick-replies-height, 80px), 25dvh) !important;
+    flex-shrink: 0;
+    align-items: flex-start;
+    overflow-y: auto !important;
+    overscroll-behavior-y: contain;
+    scrollbar-gutter: stable;
+    touch-action: pan-x pan-y;
+}
+body.waifuMode.prome-limit-quick-replies #qr--bar > .qr--buttons {
+    flex-shrink: 0;
+    min-width: 0;
+}

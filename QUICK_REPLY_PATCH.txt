@@ -1,0 +1,28 @@
+Prome Quick Reply layout patch 1
+
+INSTALL
+Merge the included Prome-VN-Extension folder into your existing extension
+folder, overwriting files. Do not create a nested extension folder.
+Restart SillyTavern, then Ctrl+F5 in the browser. No build is needed.
+
+SETTINGS
+Extensions > Prome (Visual Novel Extension) > Sheld Configuration
+- Limit Quick Reply rows in VN mode: enabled by default.
+- Desktop rows: 2 by default, adjustable from 1 to 6.
+- Mobile rows: 1 by default, adjustable from 1 to 6.
+Mobile applies at viewport widths of 1000 pixels or less.
+
+Extra replies scroll inside the inline bar. The popup, normal chat layout,
+Quick Reply definitions, and existing Prome sprite behavior are unchanged.
+Row heights follow the current theme/font. The bar is additionally limited
+to 25% of viewport height on browsers supporting dynamic viewport units,
+so small windows and mobile keyboards cannot let it consume most of the view.
+Turn off the checkbox to restore the original unlimited bar.
+
+Files changed: index.js, constants.js, html/settings.html, style.css,
+manifest.json. Added: modules/quick-replies.js and this guide.
+
+Validation: JavaScript parsed; settings HTML and manifest paths verified;
+16 checks for measured heights, desktop/mobile settings, added/hidden buttons,
+bar replacement, toggling, and update coalescing passed in a test harness.
+A live SillyTavern browser layout was not available for visual verification.

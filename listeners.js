@@ -206,7 +206,10 @@ function applyDefocus() {
 }
 
 async function emulateGroupSprites() {
-	const context = getContext();
+    // Leave native Expressions sprites alone when emulation is disabled.
+    if (!extension_settings[extensionName]?.emulateSprites) return;
+
+    const context = getContext();
 	const group = context.groups.find((x) => x.id === context.groupId);
 	const filteredMembers = group.members.filter(
 		(x) => !group.disabled_members.includes(x) && x !== "prome-user",
@@ -234,21 +237,21 @@ async function emulateGroupSprites() {
 			const spriteSelector = `#visual-novel-wrapper [id='expression-${character.avatar}']`;
 
 			waitForElement(spriteSelector, (sprite) => {
+				if (!extension_settings[extensionName]?.emulateSprites) return;
+
 				const expressionImage = sprite.find("img")[0];
 				if (expressionImage) {
-					if (extension_settings[extensionName].emulateSprites) {
-						expressionImage.src = `/characters/${character.avatar}`;
-					} else {
-						expressionImage.src = "";
-					}
+					expressionImage.src = `/characters/${character.avatar}`;
 				}
 			});
 		}),
 	);
 }
-
 async function emulateSoloSprites() {
-	const context = getContext();
+    // Do not modify native Expressions sprites when emulation is disabled.
+    if (!extension_settings[extensionName]?.emulateSprites) return;
+
+    const context = getContext();
 	if (context.characterId === undefined || context.characterId === "prome-user") return;
 
 	const character = context.characters[context.characterId];

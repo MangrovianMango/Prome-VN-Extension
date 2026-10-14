@@ -51,6 +51,17 @@
                                 <small data-i18n="(Requires Prome to be enabled)">(Requires Prome to be enabled)</small>
                             </div>
                         </label>
+                        <hr />
+                        <label class="checkbox_label" for="prome-limit-quick-replies">
+                            <input id="prome-limit-quick-replies" type="checkbox" />
+                            <span>Limit Quick Reply rows in VN mode</span>
+                        </label>
+                        <small>Extra replies scroll inside the bar instead of shrinking the chat. The popup is unaffected.</small>
+                        <label for="prome-quick-reply-desktop">Desktop rows: <output id="prome-quick-reply-desktop-value">2</output></label>
+                        <input id="prome-quick-reply-desktop" type="range" min="1" max="6" step="1" value="2" />
+                        <label for="prome-quick-reply-mobile">Mobile rows: <output id="prome-quick-reply-mobile-value">1</output></label>
+                        <input id="prome-quick-reply-mobile" type="range" min="1" max="6" step="1" value="1" />
+                        <small>Mobile layout applies at a window width of 1000 pixels or less.</small>
                     </div>
                 </details>
 
